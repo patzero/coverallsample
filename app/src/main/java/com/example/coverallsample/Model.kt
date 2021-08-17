@@ -1,3 +1,5 @@
+package com.example.coverallsample
+
 class Model {
     val data = "hello"
 

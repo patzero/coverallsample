@@ -1,6 +1,5 @@
 package com.example.coverallsample
 
-import Model
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
