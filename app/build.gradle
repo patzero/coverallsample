@@ -86,7 +86,8 @@ task testCoverage(type: JacocoReport, dependsOn: "testDebugUnitTest") {
     executionData.setFrom(projectFiles + buildFiles)
 
     coverallsJacoco {
-        reportPath = "app/build/reports/jacoco/testCoverage/testCoverage.xml"
+        reportPath = "${buildDir}/reports/jacoco/testCoverage/testCoverage.xml"
+//        reportPath = "" // default: "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 
     tasks.coverallsJacoco.dependsOn(it)
