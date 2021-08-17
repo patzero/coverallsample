@@ -48,14 +48,14 @@ jobs:
       #        with:
       #          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: test
-        run: ./gradlew testDebugUnitTest
-
-      - name: test coverage report
-        run: ./gradlew testDebugUnitTest
+      #      - name: test
+      #        run: ./gradlew testDebugUnitTest
+      #
+      #      - name: test coverage report
+      #        run: ./gradlew testCoverage
 
       - name: publish test coverage to Coverall
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew coverallsJacoco
+        #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew test jacocoReport coverallsJacoco

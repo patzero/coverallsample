@@ -55,35 +55,34 @@ task testCoverage(type: JacocoReport, dependsOn: "testDebugUnitTest") {
         html.destination file("${buildDir}/reports/codecoverage")
     }
 
-    def ignoredFilter = [
-            '**/R.class',
-            '**/R$*.class',
-            '**/BuildConfig.*',
-            '**/Manifest*.*',
-            'android/**/*.*',
-            'com.android/**/*.*',
-            'com.google/**/*.*',
-            '**/ApplicationModule_ProvideApplicationFactory.class',
-            '**/*Module_Provide*Factory.class',
-            '**/Dagger*Component*.class',
-            '**/*_MembersInjector*.class',
-            '**/*_Factory*.class'
-
-    ]
-    def debugTree = fileTree(dir: "${project.buildDir}/intermediates/javac/debug/",
-            excludes: ignoredFilter)
-
-    getSourceDirectories().setFrom(files(android.sourceSets.main.java.srcDirs))
-    getClassDirectories().setFrom(files([debugTree]))
-    getAdditionalSourceDirs().setFrom(files([
-            "${buildDir}/generated/source/buildConfig/debug",
-            "${buildDir}/generated/source/r/debug"
-    ]))
-    def projectFiles = fileTree(dir: project.projectDir, includes: ['**/*.exec', '**/*.ec']).files
-    def buildFiles = fileTree(dir: "$buildDir",
-            includes: ["jacoco/testDebugUnitTest.exec", "outputs/code-coverage/connected/*coverage.ec"
-            ]).files
-    executionData.setFrom(projectFiles + buildFiles)
+//    def ignoredFilter = [
+//            '**/R.class',
+//            '**/R$*.class',
+//            '**/BuildConfig.*',
+//            '**/Manifest*.*',
+//            'android/**/*.*',
+//            'com.android/**/*.*',
+//            'com.google/**/*.*',
+//            '**/ApplicationModule_ProvideApplicationFactory.class',
+//            '**/*Module_Provide*Factory.class',
+//            '**/Dagger*Component*.class',
+//            '**/*_MembersInjector*.class',
+//            '**/*_Factory*.class'
+//    ]
+//    def debugTree = fileTree(dir: "${project.buildDir}/intermediates/javac/debug/",
+//            excludes: ignoredFilter)
+//
+//    getSourceDirectories().setFrom(files(android.sourceSets.main.java.srcDirs))
+//    getClassDirectories().setFrom(files([debugTree]))
+//    getAdditionalSourceDirs().setFrom(files([
+//            "${buildDir}/generated/source/buildConfig/debug",
+//            "${buildDir}/generated/source/r/debug"
+//    ]))
+//    def projectFiles = fileTree(dir: project.projectDir, includes: ['**/*.exec', '**/*.ec']).files
+//    def buildFiles = fileTree(dir: "$buildDir",
+//            includes: ["jacoco/testDebugUnitTest.exec", "outputs/code-coverage/connected/*coverage.ec"
+//            ]).files
+//    executionData.setFrom(projectFiles + buildFiles)
 
     coverallsJacoco {
         reportPath = "${buildDir}/reports/jacoco/testCoverage/testCoverage.xml"
@@ -92,3 +91,35 @@ task testCoverage(type: JacocoReport, dependsOn: "testDebugUnitTest") {
 
     tasks.coverallsJacoco.dependsOn(it)
 }
+
+task jacocoReport(type: JacocoReport, dependsOn: 'test') {
+
+    // Define what type of report we should generate
+    // If we don't want to process the data further, html should be enough
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    // Setup the .class, source, and execution directories
+    final fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', 'android/**/*.*']
+
+    sourceDirectories.setFrom files(["${project.projectDir}/src/main/java"])
+    classDirectories.setFrom files([
+            fileTree(dir: "${project.buildDir}/classes", excludes: fileFilter),
+            fileTree(dir: "${project.buildDir}/intermediates/javac/debug", excludes: fileFilter),
+            fileTree(dir: "${project.buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter),
+    ])
+    executionData.setFrom fileTree(dir: project.buildDir, includes: [
+            'jacoco/*.exec', 'outputs/code-coverage/connected/*coverage.ec'
+    ])
+
+    coverallsJacoco {
+        reportPath = "${buildDir}/reports/jacoco/jacocoReport/jacocoReport.xml"
+//        reportPath = "" // default: "build/reports/jacoco/test/jacocoTestReport.xml"
+    }
+
+    tasks.coverallsJacoco.dependsOn(it)
+}
+
+
