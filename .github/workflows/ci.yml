@@ -46,12 +46,15 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
+      - name: Coveralls GitHub Action
+        uses: coverallsapp/github-action@1.1.3
+
       - name: test
         run: ./gradlew testDebugUnitTest
 
       - name: test coverage report
         run: ./gradlew testDebugUnitTest
-        
+
       - name: publish test coverage to Coverall
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
