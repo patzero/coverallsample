@@ -15,19 +15,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      #      - name: Coveralls GitHub Action
-      #        uses: coverallsapp/github-action@1.1.3
-      #        with:
-      #          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      #      - name: test
-      #        run: ./gradlew testDebugUnitTest
-      #
-      #      - name: test coverage report
-      #        run: ./gradlew testCoverage
-
       - name: publish test coverage to Coverall
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew test jacocoReport coverallsJacoco
